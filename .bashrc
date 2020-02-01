@@ -1,4 +1,4 @@
-VERSION=89
+VERSION=90
 # Author: Matty < matty91 at gmail dot com >
 # Last Updated: 11-29-2018
 # License: 
@@ -21,7 +21,7 @@ export HISTTIMEFORMAT="%F %T "
 
 # Git shell configuration
 export GIT_PROMPT_FETCH_REMOTE_STATUS="1"
-export GIT_PROMPT_END="[\u@$(hostname -f)][RC:$?]$ "
+export GIT_PROMPT_END="$ "
 
 # Make PS 1 useful
 prompt() {
