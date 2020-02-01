@@ -19,6 +19,10 @@ export HISTSIZE=100000
 export HISTCONTROL=ignoreboth
 export HISTTIMEFORMAT="%F %T "
 
+# Git shell configuration
+export GIT_PROMPT_FETCH_REMOTE_STATUS="1"
+export GIT_PROMPT_END="[\u@$(hostname -f)][RC:$?]$ "
+
 # Make PS 1 useful
 prompt() {
     export PS1="${CUSTOM_PS1:-\n[\u@$(hostname -f)][RC:$?][\w]$ }"
