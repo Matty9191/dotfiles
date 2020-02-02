@@ -1,4 +1,4 @@
-VERSION=90
+VERSION=91
 # Author: Matty < matty91 at gmail dot com >
 # Last Updated: 11-29-2018
 # License: 
@@ -22,6 +22,9 @@ export HISTTIMEFORMAT="%F %T "
 # Git shell configuration
 export GIT_PROMPT_FETCH_REMOTE_STATUS="1"
 export GIT_PROMPT_END="$ "
+export FZF_DEFAULT_OPTS='--height=70% --preview="cat {}" --preview-window=right:60%:wrap'
+export FZF_DEFAULT_COMMAND='rg --files'
+export FZF_CTRL_T_COMMAND='$FZF_DEFAULT_COMMAND'
 
 # Make PS 1 useful
 prompt() {
@@ -59,7 +62,7 @@ gows() {
 
 # Update bashrc to a newer version
 update() {
-    bashrc_source="https://raw.githubusercontent.com/Matty9191/bashrc/master/bashrc"
+    bashrc_source="https://raw.githubusercontent.com/Matty9191/dotfiles/master/.bashrc"
     temp_file=$(mktemp /tmp/bash_auto_update_XXXXXXXX)
 
     curl -s -o ${temp_file} ${bashrc_source}
@@ -199,3 +202,6 @@ fi
 
 # Add private settings
 test -f ${HOME}/.private && source ${HOME}/.private
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
