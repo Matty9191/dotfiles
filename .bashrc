@@ -1,4 +1,4 @@
-VERSION=93
+VERSION=94
 # Author: Matty < matty91 at gmail dot com >
 # Last Updated: 02-03-2020
 # License: 
@@ -213,7 +213,7 @@ ssh-add -l > /dev/null || ssh-add
 
 # Source the kubectl auto completion functions
 if [[ -x $(command -v kubectl) ]]; then
-    source <(kubectl completion bash)
+    source < $(kubectl completion bash)
 fi
 
 # Use direnv to add variables to the environment
