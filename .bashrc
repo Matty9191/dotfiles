@@ -1,6 +1,6 @@
-VERSION=91
+VERSION=93
 # Author: Matty < matty91 at gmail dot com >
-# Last Updated: 11-29-2018
+# Last Updated: 02-03-2020
 # License: 
 #  This program is free software; you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -12,8 +12,8 @@ VERSION=91
 #  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 #  GNU General Public License for more detai
 
-# History settings 
-export PATH=/bin:/usr/bin:/usr/local/bin:/sbin:/usr/sbin:/usr/games:/opt/VSCode-linux-x64:/home/matty/bin:/snap/bin
+# History settings
+export PATH=/bin:/usr/bin:/usr/local/bin:/sbin:/usr/sbin:/usr/games:/opt/VSCode-linux-x64::/snap/bin:$HOME/bin
 export HISTFILESIZE=100000
 export HISTSIZE=100000
 export HISTCONTROL=ignoreboth
@@ -45,6 +45,32 @@ export PROJECT_HOME=/home/matty/virtualenv
 
 # GO workspace path
 GOPATH=$HOME/go
+
+devme() {
+    if [[ ! -f "${HOME}/.vimrc"  ]]; then
+        git config --global user.email "matty91@gmail.com"
+        git config --global user.name "Matty"
+
+        sudo yum -y install git tmux vim python3 python3-pip curl
+        git clone https://github.com/Matty9191/dotfiles.git "${HOME}/dotfiles"
+        git clone https://github.com/Matty9191/bash-git-prompt.git "${HOME}/.bash-git-prompt"
+        mv "${HOME}/dotfiles/.bashrc" "${HOME}/.bashrc"
+        mv "${HOME}/dotfiles/.tmux.conf" "${HOME}/.tmux.conf"
+        mv "${HOME}/dotfiles/.vimrc" "${HOME}/.vimrc"
+        pip3 install --user powerline-status --user
+    fi
+
+    if [[ -d "${HOME}/dotfiles" ]]; then
+        rm -rf "${HOME}/dotfiles"
+    fi
+
+    if [[ ! -d "${HOME}/bin" ]]; then
+        mkdir "${HOME}/bin"
+        curl -o "${HOME}/bin/fzf" https://prefetch.net/bin/fzf
+        curl -o "${HOME}/bin/rg" https://prefetch.net/bin/rg
+        chmod 700 "${HOME}/bin/fzf" "${HOME}/bin/rg"
+    fi
+}
 
 # View markdown files from the command line
 vmd() {
@@ -204,4 +230,3 @@ fi
 test -f ${HOME}/.private && source ${HOME}/.private
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
-

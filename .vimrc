@@ -92,7 +92,7 @@ vnoremap <Space> zf
 autocmd BufWinLeave *.* mkview
 autocmd BufWinEnter *.* silent loadview"
 
-set rtp+=/usr/share/vim/addons/plugin/
+set rtp+=${HOME}/.local/lib/python3.6/site-packages/powerline/bindings/vim/plugin
 python3 from powerline.vim import setup as powerline_setup
 python3 powerline_setup()
 python3 del powerline_setup
