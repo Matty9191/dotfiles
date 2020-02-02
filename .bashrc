@@ -48,10 +48,9 @@ GOPATH=$HOME/go
 
 devme() {
     if [[ ! -f "${HOME}/.vimrc"  ]]; then
-        git config --global user.email "matty91@gmail.com"
-        git config --global user.name "Matty"
-
         sudo yum -y install git tmux vim python3 python3-pip curl
+	git config --global user.email "matty91@gmail.com"
+        git config --global user.name "Matty"
         git clone https://github.com/Matty9191/dotfiles.git "${HOME}/dotfiles"
         git clone https://github.com/Matty9191/bash-git-prompt.git "${HOME}/.bash-git-prompt"
         mv "${HOME}/dotfiles/.bashrc" "${HOME}/.bashrc"
