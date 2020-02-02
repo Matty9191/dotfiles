@@ -212,8 +212,8 @@ export SSH_AUTH_SOCK=~/.ssh/ssh_auth_sock
 ssh-add -l > /dev/null || ssh-add
 
 # Source the kubectl auto completion functions
-if [[ -x $(command -v kubectl) ]]; then
-    source < $(kubectl completion bash)
+if [[ -x "$(command -v kubectl)" ]]; then
+    eval $(kubectl completion bash)
 fi
 
 # Use direnv to add variables to the environment
