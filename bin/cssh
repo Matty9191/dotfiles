@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+CLUSTERS=$HOME/.clusters
+
+# Make sure a cluster name was passed in
+if [[ ${#} -ne 1 ]]; then
+    echo "Usage: $0 cluster"
+    exit 1
+else
+    CLUSTER_NAME="${1}"
+fi
+
+# Check to make sure the cluster entry is correct
+if [[ $(egrep "^${CLUSTER_NAME}" "${CLUSTERS}" | wc -w) -lt 3 ]]; then
+    echo "The cluster entry isn't formatted correctly"
+    echo "Format: CLUSTER_NAME HOST1 HOST2 ..."
+    exit 1
+fi
+
+hosts=$(egrep "^${CLUSTER_NAME}" "${CLUSTERS}" | cut -d' ' -f3-)
+leader=$(egrep "^${CLUSTER_NAME}" "${CLUSTERS}" | cut -d' ' -f2)
+
+# Set up the session leader
+tmux new-session -d -s "${CLUSTER_NAME}" "ssh ${leader}"
+
+# Create a new pane for each remaining host
+for host in ${hosts}; do
+    tmux split-window -h "ssh ${host}"
+done
+
+# Create a tiled layout and set the session leader to pane 0
+tmux select-layout tiled
+tmux select-pane -t 0
+tmux set-window-option synchronize-panes on
+tmux attach
