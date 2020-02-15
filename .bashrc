@@ -1,4 +1,4 @@
-VERSION=94
+VERSION=95
 # Author: Matty < matty91 at gmail dot com >
 # Last Updated: 02-03-2020
 # License: 
@@ -27,11 +27,16 @@ export FZF_DEFAULT_COMMAND='rg --files'
 export FZF_CTRL_T_COMMAND='$FZF_DEFAULT_COMMAND'
 
 # Make PS 1 useful
+export KUBE_PS1_PREFIX=''
+export KUBE_PS1_SUFFIX=''
+export KUBE_PS1_SYMBOL_ENABLE='false'
+export KUBE_PS1_CTX_COLOR=''
+export KUBE_PS1_NS_COLOR=''
+
 prompt() {
-    export PS1="${CUSTOM_PS1:-\n[\u@$(hostname -f)][RC:$?][\w]$ }"
+    export PS1="${CUSTOM_PS1:-\n[\u@$(hostname -f)][RC:$?][\w][$(kube_ps1)]$ }"
 }
 PROMPT_COMMAND=prompt
-
 
 # Append to the history file
 shopt -s histappend
@@ -49,7 +54,7 @@ GOPATH=$HOME/go
 devme() {
     if [[ ! -f "${HOME}/.vimrc"  ]]; then
         sudo yum -y install git tmux vim python3 python3-pip curl
-	git config --global user.email "matty91@gmail.com"
+        git config --global user.email "matty91@gmail.com"
         git config --global user.name "Matty"
         git clone https://github.com/Matty9191/dotfiles.git "${HOME}/dotfiles"
         git clone https://github.com/Matty9191/bash-git-prompt.git "${HOME}/.bash-git-prompt"
@@ -113,8 +118,7 @@ update() {
 }
 
 dict() {
-        if [ "${1}" != "" ]
-        then     
+        if [[ "${1}" != "" ]]; then
                 lynx -cfg=/dev/null -dump "http://www.dictionary.com/cgi-bin/dict.pl?term=$1" | more
         else
                 echo "USAGE: dict word"
@@ -124,8 +128,7 @@ dict() {
 nrange() {
         lo=$1
         hi=$2
-        while [ $lo -le $hi ]
-        do 
+        while [[ $lo -le $hi ]]; do
                 echo -n $lo " "
                 lo=`expr $lo + 1`
         done
@@ -166,7 +169,7 @@ extract () {
 }
 
 # Run the last command with sudo  (thanks stackoverflow)
-ss() { 
+ss() {
     if [[ $# == 0 ]]; then
        sudo $(history -p '!!')
     else
@@ -177,12 +180,12 @@ ss() {
 # Remove comments from a file
 rc() {
     egrep "^#" ${1}
-} 
+}
 
 # Have some fun
-if [ -x /bin/cowsay ] && [ -x /bin/fortune ] || 
+if [ -x /bin/cowsay ] && [ -x /bin/fortune ] ||
    [ -x /usr/games/cowsay ] && [ /usr/games/fortune ]; then
-	   fortune | cowsay
+       fortune | cowsay
 fi
 
 # User specific aliases and functions
@@ -202,17 +205,18 @@ alias iptables-clean="iptables -F && iptables -t nat -F && iptables -t mangle -F
 alias ipconfig="ip -c a"
 alias dockerc='docker rm $(docker ps -a -q)'
 alias dockeric='docker rmi $(docker images | grep "^<none>" | awk "{print $3}")'
+alias conntrackt="cat /proc/sys/net/netfilter/nf_conntrack_count"
 
 if [ ! -S ~/.ssh/ssh_auth_sock ]; then
     eval `ssh-agent`
     ln -sf "$SSH_AUTH_SOCK" ~/.ssh/ssh_auth_sock
+    export SSH_AUTH_SOCK=~/.ssh/ssh_auth_sock
+    ssh-add -l > /dev/null || ssh-add
 fi
-export SSH_AUTH_SOCK=~/.ssh/ssh_auth_sock
-ssh-add -l > /dev/null || ssh-add
 
 # Source the kubectl auto completion functions
 if [[ -x "$(command -v kubectl)" ]]; then
-    eval $(kubectl completion bash)
+    eval "$(kubectl completion bash)"
 fi
 
 # Use direnv to add variables to the environment
@@ -220,12 +224,23 @@ if [[ -x "$(command -v direnv)" ]]; then
     eval "$(direnv hook bash)"
 fi
 
-if [ -f "$HOME/.bash-git-prompt/gitprompt.sh" ]; then
+# Add a git prompt if inside a git repository
+if [[ -f "$HOME/.bash-git-prompt/gitprompt.sh" ]]; then
     GIT_PROMPT_ONLY_IN_REPO=1
     source $HOME/.bash-git-prompt/gitprompt.sh
 fi
 
-# Add private settings
-test -f ${HOME}/.private && source ${HOME}/.private
+# Add fzf to the toolkit
+if [[ -f ~/.fzf.bash ]]; then
+    source "${HOME}/.fzf.bash"
+fi
 
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+# Add Kubernetes context and namespace to PS1
+if [[ -f "$(command -v kube-ps1.sh)" ]]; then
+    source "$(command -v kube-ps1.sh)"
+fi
+
+# Add private settings
+if [[ -f ${HOME}/.private ]]; then
+    source ${HOME}/.private
+fi
