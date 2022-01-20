@@ -236,8 +236,8 @@ if [[ -f ~/.fzf.bash ]]; then
 fi
 
 # Add Kubernetes context and namespace to PS1
-if [[ -f "$(command -v kube-ps1.sh)" ]]; then
-    source "$(command -v kube-ps1.sh)"
+if [[ -f "$(command -v kube-ps1)" ]]; then
+    source "$(command -v kube-ps1)"
 fi
 
 # Add private settings
