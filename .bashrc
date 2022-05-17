@@ -206,6 +206,7 @@ alias ipconfig="ip -c a"
 alias dockerc='docker rm $(docker ps -a -q)'
 alias dockeric='docker rmi $(docker images | grep "^<none>" | awk "{print $3}")'
 alias conntrackt="cat /proc/sys/net/netfilter/nf_conntrack_count"
+alias gitl="git log --graph --oneline --decorate"
 
 if [ ! -S ~/.ssh/ssh_auth_sock ]; then
     eval `ssh-agent`
